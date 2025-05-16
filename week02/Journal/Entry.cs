@@ -1,14 +1,39 @@
+using System;
+
 public class Entry
 {
-    public string _date;
-    public string _prompt;
-    public string _text;
+    public string Prompt { get; set; }
+    public string Response { get; set; }
+    public string Date { get; set; }
 
-    public void Display()
+    public Entry(string prompt, string response, string date)
     {
-        Console.WriteLine($"Date: {_date}");
-        Console.WriteLine($"Prompt: {_prompt}");
-        Console.WriteLine($"Entry: {_text}");
-        Console.WriteLine();
+        Prompt = prompt;
+        Response = response;
+        Date = date;
+    }
+
+    public override string ToString()
+    {
+        return $"Date: {Date}\nPrompt: {Prompt}\nResponse: {Response}\n";
+    }
+
+ 
+    public string Serialize()
+    {
+        return $"{Date}|{Prompt}|{Response}";
+    }
+
+    public static Entry Deserialize(string line)
+    {
+        var parts = line.Split('|');
+        if(parts.Length == 3)
+        {
+            return new Entry(parts[1], parts[2], parts[0]);
+        }
+        else
+        {
+            throw new Exception("Invalid entry format");
+        }
     }
 }
