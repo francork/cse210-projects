@@ -5,9 +5,15 @@ namespace MindfulnessApp
 {
     public abstract class Activity
     {
-        private int duration;
-        protected string activityName;
-        protected string description;
+        protected string _activityName;
+        protected string _description;
+        protected int _durationSeconds;
+
+        public Activity(string name, string description)
+        {
+            _activityName = name;
+            _description = description;
+        }
 
         public void Start()
         {
@@ -19,47 +25,51 @@ namespace MindfulnessApp
         private void ShowStartingMessage()
         {
             Console.Clear();
-            Console.WriteLine($"*** {activityName} ***");
+            Console.WriteLine($"--- {_activityName} ---");
             Console.WriteLine();
-            Console.WriteLine(description);
+            Console.WriteLine(_description);
             Console.WriteLine();
-            duration = GetDurationFromUser();
-            Console.WriteLine("Get ready to begin...");
-            PauseWithAnimation(3);
-        }
 
-        private int GetDurationFromUser()
-        {
-            int seconds;
-            do
+            Console.Write("Enter duration in seconds: ");
+            while (!int.TryParse(Console.ReadLine(), out _durationSeconds) || _durationSeconds <= 0)
             {
-                Console.Write("Enter the duration of the activity in seconds: ");
-            } while (!int.TryParse(Console.ReadLine(), out seconds) || seconds <= 0);
-            return seconds;
+                Console.Write("Please enter a valid positive number: ");
+            }
+
+            Console.WriteLine("Get ready...");
+            ShowSpinner(3);
         }
 
         private void ShowEndingMessage()
         {
             Console.WriteLine();
-            Console.WriteLine("Well done! You have completed the activity.");
-            PauseWithAnimation(3);
-            Console.WriteLine($"Activity completed: {activityName} ({duration} seconds)");
-            PauseWithAnimation(3);
+            Console.WriteLine("Well done!");
+            ShowSpinner(3);
+            Console.WriteLine($"You have completed the {_activityName} for {_durationSeconds} seconds.");
+            ShowSpinner(3);
         }
 
-        protected void PauseWithAnimation(int seconds)
+        protected void ShowSpinner(int seconds)
         {
-            for (int i = 0; i < seconds; i++)
+            string[] spinner = { "|", "/", "-", "\\" };
+            int counter = 0;
+            for (int i = 0; i < seconds * 4; i++)
             {
-                Console.Write(".");
-                Thread.Sleep(1000);
+                Console.Write(spinner[counter]);
+                counter = (counter + 1) % spinner.Length;
+                Thread.Sleep(250);
+                Console.Write("\b");
             }
-            Console.WriteLine();
         }
 
-        protected int GetDuration()
+        protected void ShowCountdown(int seconds)
         {
-            return duration;
+            for (int i = seconds; i > 0; i--)
+            {
+                Console.Write(i);
+                Thread.Sleep(1000);
+                Console.Write("\b \b");
+            }
         }
 
         protected abstract void RunActivity();

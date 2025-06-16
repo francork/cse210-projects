@@ -6,59 +6,49 @@ namespace MindfulnessApp
 {
     public class ListingActivity : Activity
     {
-        private readonly List<string> prompts = new List<string>()
+        private readonly List<string> _prompts = new List<string>()
         {
             "Who are people that you appreciate?",
-            "What are your personal strengths?",
-            "Who have you helped this week?",
-            "When have you felt the Holy Spirit this month?",
+            "What are personal strengths of yours?",
+            "Who are people that you have helped this week?",
+            "When have you felt the Holy Ghost this month?",
             "Who are some of your personal heroes?"
         };
 
-        public ListingActivity()
-        {
-            activityName = "Listing Activity";
-            description = "This activity will help you reflect on the good things in your life by listing as many as you can in a certain area.";
-        }
+        public ListingActivity() : base(
+            "Listing Activity",
+            "This activity will help you reflect on the good things in your life by having you list as many things as you can in a certain area.")
+        { }
 
         protected override void RunActivity()
         {
-            int duration = GetDuration();
-            Console.Clear();
+            Random random = new Random();
 
-            Random rnd = new Random();
-            string prompt = prompts[rnd.Next(prompts.Count)];
+            // Show a random prompt
+            string prompt = _prompts[random.Next(_prompts.Count)];
             Console.WriteLine(prompt);
+            Console.WriteLine("You have 5 seconds to think about your list.");
+            ShowCountdown(5);
 
-            Console.WriteLine("You may begin in...");
-            for (int i = 5; i > 0; i--)
-            {
-                Console.Write(i + " ");
-                Thread.Sleep(1000);
-            }
-            Console.WriteLine();
-            Console.WriteLine("Start listing your responses. Press Enter after each one.");
+            List<string> items = new List<string>();
 
-            DateTime startTime = DateTime.Now;
-            List<string> responses = new List<string>();
+            Console.WriteLine("Start listing items. Press enter after each item.");
 
-            while ((DateTime.Now - startTime).TotalSeconds < duration)
+            DateTime endTime = DateTime.Now.AddSeconds(_durationSeconds);
+            while (DateTime.Now < endTime)
             {
                 if (Console.KeyAvailable)
                 {
                     string input = Console.ReadLine();
                     if (!string.IsNullOrWhiteSpace(input))
                     {
-                        responses.Add(input.Trim());
+                        items.Add(input.Trim());
                     }
-                }
-                else
-                {
-                    Thread.Sleep(100);
                 }
             }
 
-            Console.WriteLine($"You listed {responses.Count} items.");
+            Console.WriteLine();
+            Console.WriteLine($"You listed {items.Count} items.");
         }
     }
 }

@@ -5,36 +5,28 @@ namespace MindfulnessApp
 {
     public class BreathingActivity : Activity
     {
-        public BreathingActivity()
-        {
-            activityName = "Breathing Activity";
-            description = "This activity will help you relax by guiding you to breathe slowly. Clear your mind and focus on your breathing.";
-        }
+        public BreathingActivity() : base(
+            "Breathing Activity",
+            "This activity will help you relax by walking you through breathing in and out slowly. Clear your mind and focus on your breathing.")
+        { }
 
         protected override void RunActivity()
         {
-            int duration = GetDuration();
-            int elapsed = 0;
-            bool breatheIn = true;
+            int timeElapsed = 0;
 
-            while (elapsed < duration)
+            while (timeElapsed < _durationSeconds)
             {
-                if (breatheIn)
-                    Console.WriteLine("Breathe in...");
-                else
-                    Console.WriteLine("Breathe out...");
+                Console.WriteLine("Breathe in...");
+                ShowCountdown(4);
+                timeElapsed += 4;
+                if (timeElapsed >= _durationSeconds) break;
 
-                // Pause with countdown of 4 seconds per breath
-                for (int i = 4; i > 0; i--)
-                {
-                    Console.Write(i + " ");
-                    Thread.Sleep(1000);
-                    elapsed++;
-                    if (elapsed >= duration)
-                        break;
-                }
+                Console.WriteLine("Breathe out...");
+                ShowCountdown(6);
+                timeElapsed += 6;
+                if (timeElapsed >= _durationSeconds) break;
+
                 Console.WriteLine();
-                breatheIn = !breatheIn;
             }
         }
     }

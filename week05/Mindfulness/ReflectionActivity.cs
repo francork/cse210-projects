@@ -6,7 +6,7 @@ namespace MindfulnessApp
 {
     public class ReflectionActivity : Activity
     {
-        private readonly List<string> prompts = new List<string>()
+        private readonly List<string> _prompts = new List<string>()
         {
             "Think of a time when you stood up for someone else.",
             "Think of a time when you did something really difficult.",
@@ -14,7 +14,7 @@ namespace MindfulnessApp
             "Think of a time when you did something truly selfless."
         };
 
-        private readonly List<string> questions = new List<string>()
+        private readonly List<string> _questions = new List<string>()
         {
             "Why was this experience meaningful to you?",
             "Have you ever done anything like this before?",
@@ -27,51 +27,33 @@ namespace MindfulnessApp
             "How can you keep this experience in mind in the future?"
         };
 
-        public ReflectionActivity()
-        {
-            activityName = "Reflection Activity";
-            description = "This activity will help you reflect on times in your life when you have shown strength and resilience. " +
-                          "This will help you recognize the power you have and how you can use it in other aspects of your life.";
-        }
+        public ReflectionActivity() : base(
+            "Reflection Activity",
+            "This activity will help you reflect on times in your life when you have shown strength and resilience. This will help you recognize the power you have and how you can use it in other aspects of your life.")
+        { }
 
         protected override void RunActivity()
         {
-            int duration = GetDuration();
-            Console.Clear();
+            Random random = new Random();
 
-            Random rnd = new Random();
-            string prompt = prompts[rnd.Next(prompts.Count)];
+            // Show a random prompt
+            string prompt = _prompts[random.Next(_prompts.Count)];
             Console.WriteLine(prompt);
-            Console.WriteLine("Press Enter when you are ready to continue...");
+            Console.WriteLine("Press enter when you are ready to begin reflecting...");
             Console.ReadLine();
 
-            int elapsed = 0;
+            int timeElapsed = 0;
             int questionIndex = 0;
 
-            while (elapsed < duration)
+            while (timeElapsed < _durationSeconds)
             {
-                string question = questions[questionIndex % questions.Count];
+                string question = _questions[questionIndex % _questions.Count];
+                Console.WriteLine();
                 Console.WriteLine(question);
-                Spinner(5);
-                elapsed += 5;
+                ShowSpinner(5);
+                timeElapsed += 5;
                 questionIndex++;
             }
-        }
-
-        private void Spinner(int seconds)
-        {
-            string[] spinner = { "/", "-", "\\", "|" };
-            int counter = 0;
-            DateTime endTime = DateTime.Now.AddSeconds(seconds);
-
-            while (DateTime.Now < endTime)
-            {
-                Console.Write(spinner[counter % spinner.Length]);
-                Thread.Sleep(250);
-                Console.Write("\b");
-                counter++;
-            }
-            Console.WriteLine();
         }
     }
 }
